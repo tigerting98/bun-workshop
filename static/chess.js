@@ -30,7 +30,14 @@ const config = {
 }
 
 // create instance of game
-const chess = Chessboard('chess', config)
+const chess = Chessboard('chess', config);
 
 // Create an sse connection
 const sse = new EventSource('/chess/stream');
+// Receive moves from gameId
+sse.addEventListener(gameId, msg => {
+    console.info('>>> SSE msg: ', msg);
+    const move = JSON.parse(msg.data);
+    console.info(`Move: ${msg.data}`);
+    chess.move(`${move.src}-${move.dst}`);
+});
